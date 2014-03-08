@@ -1,81 +1,45 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class Recycling {
+
 	public static void main(String[] args) throws IOException {
 		BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
 		String tmp = read.readLine();
-		int[] st = new int[3];
-		int[] nd = new int[3];
-		int[] rd = new int[3];
-		int[] case1 = new int[3];
-		int[] case2 = new int[3];
-		int[] case3 = new int[3];
-		int moves,min,counter;
-		char[] res = new char[3] ;
-		while(tmp != null ){
-			min=(int) Math.pow(2, 31);
-			tmp +="  ";
-			counter=0;
-			String[] all =  {"z","z","z","z","z","z"};
-			for(int i=0; i<3; i++){
-				if(i==0){
-					st[0] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-					st[1] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-					st[2] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-				}else if(i==1){
-					nd[0] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-					nd[1] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-					nd[2] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-				}else if(i==2){
-					rd[0] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-					rd[1] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
-					rd[2] = Integer.parseInt(tmp.substring(0,tmp.indexOf(" ")));
-					tmp = tmp.substring(tmp.indexOf(" ")+1);
+		String col = "roygb";
+		while(!tmp.equals("#")){
+			ArrayList<HashMap<Character, Character>> cities = new ArrayList<HashMap<Character,Character>>();
+			while(tmp.charAt(0) != 'e'){
+				HashMap<Character, Character> city = new HashMap<Character, Character>();
+				for(int i=0; i<tmp.length(); i=i+4){
+					city.put(tmp.charAt(i), tmp.charAt(i+2));
 				}
+				cities.add(city);
+				tmp = read.readLine();
 			}
-			case1[0]= st[1]+st[2];case1[1]= nd[1]+nd[2];case1[2]= rd[1]+rd[2];
-			case2[0]= st[0]+st[2];case2[1]= nd[0]+nd[2];case2[2]= rd[0]+rd[2];
-			case3[0]= st[0]+st[1];case3[1]= nd[0]+nd[1];case3[2]= rd[0]+rd[1];
-			for(int i=0; i<case1.length; i++){
-				for(int j=0; j<case2.length; j++){
-					if(i!=j){
-						for(int k=0; k<case3.length; k++){
-							if(k!=j && k!=i){
-								moves = case1[i]+case2[j]+case3[k];
-								if(moves<=min){
-									if(moves<min){
-										min = moves;
-										res[i]= 'B';res[j]='G';res[k]='C';
-										for(int m=0; m<all.length; m++){
-											all[m]="z";
-										}
-										counter=0;
-										all[counter]= ""+res[0]+""+res[1]+""+res[2];
-									}else if(moves == min){
-										res[i]= 'B';res[j]='G';res[k]='C';
-										counter++;
-										all[counter]= ""+res[0]+""+res[1]+""+res[2];	
-									}
-								}	
+			int changes = Integer.MAX_VALUE;
+			int city = 0;
+			for(int i=0; i<cities.size(); i++){
+				int count=0;
+				for(int j=0; j<cities.size(); j++){
+					if(i != j){
+						for(int k=0; k<5; k++){
+							if(cities.get(i).get(col.charAt(k)) != cities.get(j).get(col.charAt(k))){
+								count++;
 							}
 						}
 					}
 				}
+				if(count < changes){
+					changes = count;
+					city = i+1;
+				}
 			}
-			
-			java.util.Arrays.sort(all);
-			System.out.println(all[0]+" "+min);
+			System.out.println(city);
 			tmp = read.readLine();
 		}
 	}
